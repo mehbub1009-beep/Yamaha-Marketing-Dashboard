@@ -394,6 +394,52 @@ tr:hover td{background:var(--bg2)}
 .emp h3{font-size:14px;font-weight:500;color:var(--tx2);margin-bottom:4px}
 .emp p{font-size:12px}
 
+/* ── Upload Modal ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,15,15,0.32);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px);padding:20px;animation:fadeIn .15s ease}
+.modal-backdrop.on{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes modalUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.modal{background:var(--bg);border-radius:12px;width:480px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(15,15,15,0.18),0 4px 12px rgba(15,15,15,0.08);animation:modalUp .2s ease;border:1px solid var(--br)}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--br);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:15px;font-weight:600;color:var(--tx);letter-spacing:-.2px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--tx3);padding:4px 6px;font-size:18px;line-height:1;border-radius:4px;transition:all .1s;font-family:var(--fn)}
+.modal-close:hover{background:var(--bg3);color:var(--tx)}
+.modal-body{padding:20px 22px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--br);display:flex;justify-content:flex-end;gap:8px;background:var(--bg2);border-radius:0 0 12px 12px}
+.modal-section{margin-bottom:20px}
+.modal-section:last-child{margin-bottom:0}
+.modal-label{font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:block}
+.radio-group{display:flex;gap:8px}
+.radio-card{flex:1;padding:11px 14px;border:1.5px solid var(--br);border-radius:8px;cursor:pointer;transition:all .12s;background:var(--bg);user-select:none}
+.radio-card:hover{border-color:var(--br2);background:var(--bg2)}
+.radio-card.on{border-color:var(--ac);background:var(--ac-bg);box-shadow:0 0 0 3px rgba(253,15,22,0.07)}
+.radio-card-title{font-size:13px;font-weight:600;color:var(--tx);letter-spacing:-.1px}
+.radio-card-sub{font-size:11px;color:var(--tx3);margin-top:2px}
+.radio-card.on .radio-card-title{color:var(--ac)}
+.modal-input{width:100%;border:1px solid var(--br2);border-radius:6px;padding:7px 10px;font-size:13px;background:var(--bg);color:var(--tx);font-family:var(--fn);outline:none;transition:border-color .1s}
+.modal-input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(253,15,22,0.07)}
+.date-row{display:flex;gap:10px}
+.date-row > div{flex:1}
+.date-row > div label{display:block;font-size:10px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.file-pick{display:flex;align-items:center;gap:11px;padding:12px 14px;border:1.5px dashed var(--br2);border-radius:8px;cursor:pointer;transition:all .12s;background:var(--bg)}
+.file-pick:hover{border-color:var(--ac);background:var(--ac-bg)}
+.file-pick.has-file{border-style:solid;border-color:var(--ac);background:var(--ac-bg)}
+.file-pick svg{width:18px;height:18px;stroke:var(--tx3);fill:none;flex-shrink:0}
+.file-pick.has-file svg{stroke:var(--ac)}
+.file-pick-info{flex:1;min-width:0}
+.file-pick-name{font-size:12.5px;color:var(--tx);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-pick-meta{font-size:11px;color:var(--tx3);margin-top:1px}
+.modal-help{font-size:11px;color:var(--tx3);margin-top:8px;line-height:1.45}
+.modal-help strong{color:var(--tx2);font-weight:600}
+
+/* Type badges on catalogue cards + sidebar */
+.type-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:4px;font-size:9.5px;font-weight:700;font-family:var(--mo);text-transform:uppercase;letter-spacing:.05em;vertical-align:middle}
+.type-retail{background:var(--ac-bg);color:var(--ac)}
+.type-factory{background:#eef4ff;color:#2563eb}
+.type-combined{background:#f0fdf4;color:#0f8b62}
+.fc-tags{display:flex;align-items:center;gap:5px;margin-top:6px;flex-wrap:wrap}
+.fc-date{font-size:10.5px;color:var(--tx3);font-family:var(--mo)}
+
 /* Toast */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--tx);color:var(--bg);padding:8px 16px;border-radius:var(--r2);font-size:12px;font-weight:500;z-index:1000;transition:transform .2s;pointer-events:none}
 .toast.on{transform:translateX(-50%) translateY(0)}
@@ -671,6 +717,80 @@ tr:hover td{background:var(--bg2)}
 
 </main>
 </div>
+<!-- ═══ UPLOAD MODAL ═══ -->
+<div class="modal-backdrop" id="upload-modal" onclick="if(event.target===this)closeUploadModal()">
+<div class="modal" role="dialog" aria-labelledby="upload-modal-title">
+<div class="modal-head">
+<div class="modal-title" id="upload-modal-title">Upload stock data</div>
+<button class="modal-close" onclick="closeUploadModal()" aria-label="Close">×</button>
+</div>
+<div class="modal-body">
+
+<div class="modal-section">
+<label class="modal-label">Data type</label>
+<div class="radio-group" id="data-type-group">
+<div class="radio-card on" data-value="retail" onclick="selectDataType('retail')">
+<div class="radio-card-title">Retail data</div>
+<div class="radio-card-sub">Dealer stock &amp; movement</div>
+</div>
+<div class="radio-card" data-value="factory" onclick="selectDataType('factory')">
+<div class="radio-card-title">Factory data</div>
+<div class="radio-card-sub">Warehouse stock &amp; shipments</div>
+</div>
+</div>
+</div>
+
+<div class="modal-section">
+<label class="modal-label">Reporting period</label>
+<div class="radio-group" id="date-mode-group" style="margin-bottom:12px">
+<div class="radio-card on" data-value="single" onclick="selectDateMode('single')">
+<div class="radio-card-title">Single day</div>
+<div class="radio-card-sub">Snapshot report</div>
+</div>
+<div class="radio-card" data-value="range" onclick="selectDateMode('range')">
+<div class="radio-card-title">Multiple days</div>
+<div class="radio-card-sub">Period report</div>
+</div>
+</div>
+<div id="date-single-wrap">
+<label class="modal-label" style="font-weight:500;text-transform:none;font-size:11px;letter-spacing:0;color:var(--tx2);margin-bottom:4px">Report date</label>
+<input type="date" class="modal-input" id="date-single">
+</div>
+<div id="date-range-wrap" style="display:none">
+<div class="date-row">
+<div>
+<label>Start date</label>
+<input type="date" class="modal-input" id="date-start">
+</div>
+<div>
+<label>End date</label>
+<input type="date" class="modal-input" id="date-end">
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal-section">
+<label class="modal-label">File</label>
+<label class="file-pick" id="file-pick-label" for="modal-file-input">
+<svg viewBox="0 0 24 24" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+<div class="file-pick-info">
+<div class="file-pick-name" id="file-pick-text">Choose CSV or XLSX file</div>
+<div class="file-pick-meta" id="file-pick-meta">Drag a file into the dashboard to skip this dialog</div>
+</div>
+<input type="file" id="modal-file-input" accept=".csv,.xlsx" style="display:none" onchange="onModalFile(event)">
+</label>
+<div class="modal-help" id="modal-help-text"><strong>Retail data:</strong> expects Model, Color, Dealer_Stock, Dealer_Movement_6mo, plus optional Region / Territory / Dealer_Point columns.</div>
+</div>
+
+</div>
+<div class="modal-foot">
+<button class="btn" onclick="closeUploadModal()">Cancel</button>
+<button class="btn btn-p" id="upload-submit" onclick="submitUpload()" disabled>Upload &amp; process</button>
+</div>
+</div>
+</div>
+
 <div class="toast" id="tst"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -686,6 +806,8 @@ let geoData=[],terrMap=null;
 let selRegion=null,selTerritory=null,selDealer=null;
 let synthHistory=null; // synthesized 6-mo history for forecast/seasonal
 let selectedForecast=null;
+let currentMeta=null; // metadata for the actively loaded dataset
+let uploadState={dataType:'retail',dateMode:'single',file:null,target:'dashboard'};
 
 const REGIONS=['Dhaka','Bangladesh East','Bangladesh South','Bangladesh North'];
 const REGION_COLORS=['rc1','rc2','rc3','rc4'];
@@ -770,12 +892,130 @@ function parseModel(name){
 // ═══════════════════════════════════════════════════════════
 // FILE PARSING
 // ═══════════════════════════════════════════════════════════
-function trigUp(){document.getElementById('fi').click();}
-function trigCat(){document.getElementById('cfi').click();}
-function hDrop(e){e.preventDefault();e.currentTarget.classList.remove('dv');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+function trigUp(){openUploadModal('dashboard');}
+function trigCat(){openUploadModal('catalogue');}
+function hDrop(e){e.preventDefault();e.currentTarget.classList.remove('dv');const f=e.dataTransfer.files[0];if(f){openUploadModal('dashboard');setModalFile(f);}}
 function handleFile(f){if(f)pFile(f,rows=>{raw=rows;showMapper(rows);});}
 function hCatFile(f){if(!f)return;pFile(f,rows=>{cat.push({id:Date.now(),name:f.name,rows,period:PERIODS[PERIODS.length-1],addedAt:new Date().toLocaleDateString()});saveCat();toast('Added: '+f.name);rCat();});}
 function handleTerrFile(f){if(!f)return;pFile(f,rows=>{buildTerrMapFromRows(rows);toast('Territory map updated');rGeo();});}
+
+// ═══════════════════════════════════════════════════════════
+// UPLOAD MODAL
+// ═══════════════════════════════════════════════════════════
+function openUploadModal(target){
+  uploadState={dataType:'retail',dateMode:'single',file:null,target:target||'dashboard'};
+  // Reset radio cards
+  document.querySelectorAll('#data-type-group .radio-card').forEach(c=>c.classList.toggle('on',c.dataset.value==='retail'));
+  document.querySelectorAll('#date-mode-group .radio-card').forEach(c=>c.classList.toggle('on',c.dataset.value==='single'));
+  document.getElementById('date-single-wrap').style.display='block';
+  document.getElementById('date-range-wrap').style.display='none';
+  // Reset inputs
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('date-single').value=today;
+  document.getElementById('date-start').value='';
+  document.getElementById('date-end').value='';
+  document.getElementById('modal-file-input').value='';
+  document.getElementById('file-pick-text').textContent='Choose CSV or XLSX file';
+  document.getElementById('file-pick-meta').textContent='Drag a file into the dashboard to skip this dialog';
+  document.getElementById('file-pick-label').classList.remove('has-file');
+  document.getElementById('upload-submit').disabled=true;
+  updateModalHelpText();
+  document.getElementById('upload-modal').classList.add('on');
+}
+
+function closeUploadModal(){document.getElementById('upload-modal').classList.remove('on');}
+
+function selectDataType(t){
+  uploadState.dataType=t;
+  document.querySelectorAll('#data-type-group .radio-card').forEach(c=>c.classList.toggle('on',c.dataset.value===t));
+  updateModalHelpText();
+}
+
+function selectDateMode(m){
+  uploadState.dateMode=m;
+  document.querySelectorAll('#date-mode-group .radio-card').forEach(c=>c.classList.toggle('on',c.dataset.value===m));
+  document.getElementById('date-single-wrap').style.display=m==='single'?'block':'none';
+  document.getElementById('date-range-wrap').style.display=m==='range'?'block':'none';
+}
+
+function updateModalHelpText(){
+  const t=uploadState.dataType;
+  const el=document.getElementById('modal-help-text');
+  if(t==='retail'){
+    el.innerHTML='<strong>Retail data:</strong> Model, Color, Dealer_Stock, Dealer_Movement, plus optional Region / Territory / Dealer_Point columns.';
+  } else {
+    el.innerHTML='<strong>Factory data:</strong> Model, Color, Factory_Stock, Factory_Movement (warehouse-side only).';
+  }
+}
+
+function onModalFile(e){const f=e.target.files[0];if(f)setModalFile(f);}
+function setModalFile(f){
+  uploadState.file=f;
+  document.getElementById('file-pick-text').textContent=f.name;
+  document.getElementById('file-pick-meta').textContent=(f.size/1024).toFixed(1)+' KB';
+  document.getElementById('file-pick-label').classList.add('has-file');
+  document.getElementById('upload-submit').disabled=false;
+}
+
+function submitUpload(){
+  if(!uploadState.file){toast('Please choose a file');return;}
+  let startDate,endDate;
+  if(uploadState.dateMode==='single'){
+    startDate=endDate=document.getElementById('date-single').value;
+    if(!startDate){toast('Please pick a date');return;}
+  } else {
+    startDate=document.getElementById('date-start').value;
+    endDate=document.getElementById('date-end').value;
+    if(!startDate||!endDate){toast('Please pick both start and end dates');return;}
+    if(startDate>endDate){toast('End date must be on or after start date');return;}
+  }
+  const meta={
+    dataType:uploadState.dataType,
+    dateMode:uploadState.dateMode,
+    startDate,endDate,
+    period:derivePeriod(startDate),
+    fileName:uploadState.file.name
+  };
+  const file=uploadState.file;
+  const target=uploadState.target;
+  closeUploadModal();
+  if(target==='dashboard'){
+    pFile(file,rows=>{
+      raw=rows;
+      currentMeta=meta;
+      showMapper(rows);
+    });
+  } else {
+    pFile(file,rows=>{
+      cat.push({id:Date.now(),name:file.name,rows,
+        period:meta.period,dataType:meta.dataType,dateMode:meta.dateMode,
+        startDate:meta.startDate,endDate:meta.endDate,
+        addedAt:new Date().toLocaleDateString()});
+      saveCat();toast('Added: '+file.name);rCat();
+    });
+  }
+}
+
+function derivePeriod(dateStr){
+  if(!dateStr)return PERIODS[PERIODS.length-1];
+  const d=new Date(dateStr);
+  return MONTHS[d.getMonth()]+' '+d.getFullYear();
+}
+
+function fmtDateRange(meta){
+  if(!meta||!meta.startDate)return '';
+  const fmt=ds=>{const d=new Date(ds);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});};
+  if(meta.dateMode==='single'||meta.startDate===meta.endDate)return fmt(meta.startDate);
+  // Same month: "Mar 5–15, 2026"; different months: "Mar 28 – Apr 3, 2026"
+  const s=new Date(meta.startDate),e=new Date(meta.endDate);
+  if(s.getMonth()===e.getMonth()&&s.getFullYear()===e.getFullYear()){
+    return `${MONTHS[s.getMonth()]} ${s.getDate()}–${e.getDate()}, ${s.getFullYear()}`;
+  }
+  return `${fmt(meta.startDate)} – ${fmt(meta.endDate)}`;
+}
+
+// Esc closes modal
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeUploadModal();}});
 
 function parseCSV(t){
   const rows=[];let cur='',inQ=false,line=[];
@@ -873,12 +1113,25 @@ function showMapper(rows){
   document.getElementById('uz').style.display='none';
   document.getElementById('ms').style.display='block';
   const hdrs=rows[0];const g=document.getElementById('mg');g.innerHTML='';
+  const dt=currentMeta?.dataType||'retail';
+  // Relevance per data type — irrelevant fields render as "— none —" by default but remain user-overridable
+  const relevant={
+    retail:new Set(['model','color','ds','dm','region','territory','dealer']),
+    factory:new Set(['model','color','fs','fm']),
+  }[dt]||new Set(FIELDS.map(f=>f.k));
+  // Header banner indicating which type
+  const banner=document.createElement('div');
+  banner.style.cssText='grid-column:1/-1;display:flex;align-items:center;gap:8px;margin-bottom:4px;padding:8px 11px;background:var(--ac-bg);border:1px solid var(--ac)22;border-radius:6px;font-size:12px;color:var(--tx2)';
+  banner.innerHTML=`<span class="type-badge type-${dt}">${dt}</span> <span>Auto-mapping ${dt==='retail'?'dealer':'factory'}-side columns. Other fields default to none.</span>`;
+  g.appendChild(banner);
   FIELDS.forEach(f=>{
     const norm=s=>s.toLowerCase().replace(/[\s_-]/g,'');
-    const gi=hdrs.findIndex(h=>f.h.some(hint=>norm(h).includes(norm(hint))));
+    const isRel=relevant.has(f.k);
+    const gi=isRel?hdrs.findIndex(h=>f.h.some(hint=>norm(h).includes(norm(hint)))):-1;
     const d=document.createElement('div');d.className='mf';
-    const opts=`<option value="-1">— none —</option>`+hdrs.map((h,i)=>`<option value="${i}"${i===gi?' selected':''}>${h}</option>`).join('');
-    d.innerHTML=`<label>${f.l}</label><select id="map-${f.k}">${opts}</select>`;g.appendChild(d);
+    if(!isRel)d.style.opacity='0.55';
+    const opts=`<option value="-1"${gi<0?' selected':''}>— none —</option>`+hdrs.map((h,i)=>`<option value="${i}"${i===gi?' selected':''}>${h}</option>`).join('');
+    d.innerHTML=`<label>${f.l}${isRel?'':' <span style="font-size:9px;color:var(--tx4)">(optional for '+dt+')</span>'}</label><select id="map-${f.k}">${opts}</select>`;g.appendChild(d);
   });
 }
 
@@ -901,7 +1154,7 @@ function compute(){
   document.getElementById('ms').style.display='none';
   document.getElementById('brief-content').style.display='block';
   geoData=comp;synthHistory=null;
-  rBrief();setAFI('Uploaded file');toast('Computed '+comp.length+' variants');
+  rBrief();setAFI(currentMeta?.fileName||'Uploaded file');toast('Computed '+comp.length+' variants');
 }
 
 function updT(){
@@ -1567,13 +1820,29 @@ function rCat(){
   const ups=['all',...new Set(cat.map(c=>c.period).sort((a,b)=>PERIODS.indexOf(a)-PERIODS.indexOf(b)))];
   pnav.innerHTML=ups.map(p=>`<button class="pch${apf===p?' on':''}" onclick="fpf('${p}')">${p==='all'?'All periods':p}</button>`).join('');
   const filt=apf==='all'?cat:cat.filter(c=>c.period===apf);
-  if(!filt.length){grid.innerHTML=`<div class="emp" style="grid-column:1/-1"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><h3>No files${apf!=='all'?' for '+apf:' yet'}</h3><p>Upload CSV or XLSX files.</p></div>`;return;}
-  grid.innerHTML=filt.map(c=>`<div class="fic"><div class="fct"><div class="fci"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><div><div class="fcn">${esc(c.name)}</div><div class="fcm">${c.rows.length-1} rows · ${c.addedAt}</div></div></div><div class="fcp"><div class="fcpl">Time period</div><select class="psi" onchange="stp(${c.id},this.value)">${PERIODS.map(p=>`<option${p===c.period?' selected':''}>${p}</option>`).join('')}</select></div><div class="fca"><button class="fb" onclick="lfc(${c.id})">Load</button><button class="fb dl2" onclick="dfc(${c.id})">Delete</button></div></div>`).join('');
+  if(!filt.length){grid.innerHTML=`<div class="emp" style="grid-column:1/-1"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><h3>No files${apf!=='all'?' for '+apf:' yet'}</h3><p>Upload CSV or XLSX files via the Add file button.</p></div>`;return;}
+  grid.innerHTML=filt.map(c=>{
+    const typeBadge=c.dataType?`<span class="type-badge type-${c.dataType}">${c.dataType}</span>`:'';
+    const dateDisplay=c.startDate?fmtDateRange(c):'';
+    return `<div class="fic">
+<div class="fct">
+<div class="fci"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div>
+<div style="flex:1;min-width:0">
+<div class="fcn">${esc(c.name)}</div>
+<div class="fcm">${c.rows.length-1} rows · added ${c.addedAt}</div>
+<div class="fc-tags">${typeBadge}${dateDisplay?`<span class="fc-date">${esc(dateDisplay)}</span>`:''}</div>
+</div>
+</div>
+<div class="fcp"><div class="fcpl">Catalogue period</div>
+<select class="psi" onchange="stp(${c.id},this.value)">${PERIODS.map(p=>`<option${p===c.period?' selected':''}>${p}</option>`).join('')}</select></div>
+<div class="fca"><button class="fb" onclick="lfc(${c.id})">Load</button><button class="fb dl2" onclick="dfc(${c.id})">Delete</button></div>
+</div>`;
+  }).join('');
 }
 function fpf(p){apf=p;rCat();}
 function stp(id,period){const c=cat.find(x=>x.id===id);if(c){c.period=period;saveCat();rCat();}}
 function dfc(id){cat=cat.filter(c=>c.id!==id);saveCat();rCat();toast('File removed');}
-function lfc(id){const c=cat.find(x=>x.id===id);if(!c)return;raw=c.rows;showMapper(c.rows);nav('brief');toast('Loaded: '+c.name);}
+function lfc(id){const c=cat.find(x=>x.id===id);if(!c)return;raw=c.rows;currentMeta=c.dataType?{dataType:c.dataType,dateMode:c.dateMode,startDate:c.startDate,endDate:c.endDate,fileName:c.name}:{fileName:c.name};showMapper(c.rows);nav('brief');toast('Loaded: '+c.name);}
 
 // ═══════════════════════════════════════════════════════════
 // TREND COMPARE
@@ -1646,7 +1915,22 @@ function loadGeoDemo(){
 // UTIL: Active file label
 // ═══════════════════════════════════════════════════════════
 function setAFI(name){
-  document.getElementById('afi').innerHTML=`<span style="color:var(--tx2);font-weight:600">${esc(name)}</span><br>${comp.length} variants`;
+  const m=currentMeta;
+  let html=`<span style="color:var(--tx2);font-weight:600;font-size:12px">${esc(name)}</span>`;
+  if(m&&m.dataType){
+    html+=` <span class="type-badge type-${m.dataType}">${m.dataType}</span>`;
+  }
+  if(m&&m.startDate){
+    html+=`<br><span style="font-size:10.5px;color:var(--tx3);font-family:var(--mo)">${esc(fmtDateRange(m))}</span>`;
+  }
+  html+=`<br>${comp.length} variants`;
+  // Indicate partial coverage if only one side
+  if(m&&m.dataType==='retail'){
+    html+=`<br><span style="font-size:10px;color:var(--tx3);font-style:italic">Dealer-side only · factory P1/P3 unavailable</span>`;
+  } else if(m&&m.dataType==='factory'){
+    html+=`<br><span style="font-size:10px;color:var(--tx3);font-style:italic">Factory-side only · dealer P1/P2 unavailable</span>`;
+  }
+  document.getElementById('afi').innerHTML=html;
 }
 
 rCat();
